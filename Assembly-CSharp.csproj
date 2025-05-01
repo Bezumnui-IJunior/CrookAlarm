@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Alarm.cs" />
+    <Compile Include="Assets/Scripts/CrookDetector.cs" />
     <Compile Include="Assets/Scripts/Crook.cs" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/6000.0.47f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
