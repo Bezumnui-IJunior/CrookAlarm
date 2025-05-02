@@ -10,7 +10,6 @@ public class SoundAlarm : MonoBehaviour
     [SerializeField] private float _maxVolume = 1;
 
     private AudioSource _source;
-    private WaitForFixedUpdate _updateDelay;
     private Coroutine _coroutine;
 
     private float _deltaVolume;
@@ -18,8 +17,7 @@ public class SoundAlarm : MonoBehaviour
     private void Awake()
     {
         _source = GetComponent<AudioSource>();
-        _updateDelay = new WaitForFixedUpdate();
-        _deltaVolume = _maxVolume * Time.fixedDeltaTime / _reachMaxSeconds;
+        _deltaVolume = _maxVolume / _reachMaxSeconds;
         _source.volume = 0;
     }
 
@@ -45,9 +43,9 @@ public class SoundAlarm : MonoBehaviour
     {
         while (Mathf.Approximately(_source.volume, target) == false)
         {
-            _source.volume = Mathf.MoveTowards(_source.volume, target, _deltaVolume);
+            _source.volume = Mathf.MoveTowards(_source.volume, target, _deltaVolume * Time.deltaTime);
 
-            yield return _updateDelay;
+            yield return null;
         }
 
         if (_source.volume == 0)
