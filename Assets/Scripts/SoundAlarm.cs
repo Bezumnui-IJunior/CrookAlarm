@@ -13,7 +13,6 @@ public class SoundAlarm : MonoBehaviour
     private WaitForFixedUpdate _updateDelay;
     private Coroutine _coroutine;
 
-    private float _volume;
     private float _deltaVolume;
 
     private void Awake()
@@ -21,6 +20,7 @@ public class SoundAlarm : MonoBehaviour
         _source = GetComponent<AudioSource>();
         _updateDelay = new WaitForFixedUpdate();
         _deltaVolume = _maxVolume * Time.fixedDeltaTime / _reachMaxSeconds;
+        _source.volume = 0;
     }
 
     private void OnEnable()
@@ -43,18 +43,20 @@ public class SoundAlarm : MonoBehaviour
 
     private IEnumerator ReachingVolume(float target)
     {
-        while (_volume > 0)
+        while (Mathf.Approximately(_source.volume, target) == false)
         {
             _source.volume = Mathf.MoveTowards(_source.volume, target, _deltaVolume);
 
             yield return _updateDelay;
         }
 
-        _source.Stop();
+        if (_source.volume == 0)
+            _source.Stop();
     }
 
     private void OnDetected()
     {
+        _source.Play();
         RestartCoroutine(ReachingVolume(_maxVolume));
     }
 
