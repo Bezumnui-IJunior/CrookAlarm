@@ -1,17 +1,18 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class CrookDetector : MonoBehaviour
 {
-    public event Action Enable;
-    public event Action Disable;
+    public event Action Detected;
+    public event Action Released;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Crook _) == false)
             return;
 
-        Enable?.Invoke();
+        Detected?.Invoke();
     }
 
     private void OnTriggerExit(Collider other)
@@ -19,6 +20,6 @@ public class CrookDetector : MonoBehaviour
         if (other.TryGetComponent(out Crook _) == false)
             return;
 
-        Disable?.Invoke();
+        Released?.Invoke();
     }
 }
