@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -42,26 +41,11 @@ public class SoundAlarm : MonoBehaviour
         _crookDetector.Released -= OnReleased;
     }
 
-    private IEnumerator IncreasingVolume()
-    {
-        _source.Play();
-
-        while (_volume < _maxVolume)
-        {
-            _volume = Mathf.MoveTowards(_volume, _maxVolume, _deltaVolume);
-
-            _source.volume = _volume;
-
-            yield return _updateDelay;
-        }
-    }
-
-    private IEnumerator DecreasingVolume()
+    private IEnumerator ReachingVolume(float target)
     {
         while (_volume > 0)
         {
-            _volume = Mathf.MoveTowards(_volume, 0, _deltaVolume);
-            _source.volume = _volume;
+            _source.volume = Mathf.MoveTowards(_source.volume, target, _deltaVolume);
 
             yield return _updateDelay;
         }
@@ -71,18 +55,19 @@ public class SoundAlarm : MonoBehaviour
 
     private void OnDetected()
     {
-        RestartCoroutine(IncreasingVolume());
+        RestartCoroutine(ReachingVolume(_maxVolume));
     }
 
     private void OnReleased()
     {
-        RestartCoroutine(DecreasingVolume());
+        RestartCoroutine(ReachingVolume(0));
     }
 
     private void RestartCoroutine(IEnumerator coroutine)
     {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
+        
         _coroutine = StartCoroutine(coroutine);
     }
 }
